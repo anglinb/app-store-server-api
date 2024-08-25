@@ -162,8 +162,9 @@ export class AppStoreServerAPI {
       case 500:
         const body = await result.json()
         let retryAfter: number | undefined
-        if (result.status === 429 && result.headers.get('retry-after')) {
-          retryAfter = parseInt(result.headers.get('retry-after'))
+        let retryAfterHeader = result.headers.get('retry-after')
+        if (result.status === 429 && retryAfterHeader !== null) {
+          retryAfter = parseInt(retryAfterHeader)
         }
         throw new AppStoreError(body.errorCode, body.errorMessage, { retryAfter })
 
