@@ -65,6 +65,15 @@ export interface HistoryResponse {
   signedTransactions: JWSTransaction[]
 }
 
+/*
+ * https://developer.apple.com/documentation/appstoreserverapi/refundhistoryresponse
+*/
+export interface RefundHistoryResponse {
+  hasMore: boolean
+  revision: string
+  signedTransactions: JWSTransaction[]  
+}
+
 /**
  * https://developer.apple.com/documentation/appstoreserverapi/transactioninforesponse
  */

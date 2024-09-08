@@ -12,6 +12,7 @@ import {
   NotificationHistoryRequest,
   NotificationHistoryResponse,
   OrderLookupResponse,
+  RefundHistoryResponse,
   SendTestNotificationResponse,
   StatusResponse,
   SubscriptionStatusesQuery,
@@ -73,6 +74,17 @@ export class AppStoreServerAPI {
     version: TransactionHistoryVersion = TransactionHistoryVersion.v1
   ): Promise<HistoryResponse> {
     const path = this.addQuery(`/inApps/${version}/history/${transactionId}`, { ...query })
+    return this.makeRequest("GET", path)
+  }
+
+  /**
+   * https://developer.apple.com/documentation/appstoreserverapi/get_refund_history  
+   */
+  async getRefundHistory(
+    transactionId: string,
+    revision?: string,
+  ): Promise<RefundHistoryResponse> {
+    const path = this.addQuery(`/inApps/v2/refund/lookup/${transactionId}`, revision ?  { revision } : {})
     return this.makeRequest("GET", path)
   }
 
