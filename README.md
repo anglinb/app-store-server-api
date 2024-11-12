@@ -132,6 +132,25 @@ if (response.hasMore) {
 }
 ```
 
+### Send consumption information
+```javascript
+await api.sendConsumptionInformation({
+  transactionId: "1234567890",
+  consumptionStatus: ConsumptionStatus.Undeclared,
+  accountTenure: AccountTenure.Undeclared,
+  appAccountToken: "cb850428-5791-474b-b89b-045fb7197ff7",
+  customerConsented: true,
+  deliveryStatus: DeliveryStatus.DeliveredAndWorking,
+  lifetimeDollarsPurchased: LifetimeDollarsPurchased.Under50,
+  lifetimeDollarsRefunded: LifetimeDollarsRefunded.Zero,
+  platform: Platform.Apple,
+  playTime: PlayTime.OneToDaysFour,
+  refundPreference: RefundPreference.Undeclared,
+  sampleContentProvided: false,
+  userStatus: UserStatus.Active
+})
+```
+
 ### Decoding server notifications
 The App Store Server API and App Store Server Notifications (version 2) are closely related and use some of the same types and encoding formats. This library includes a function to help you decode notifications (which will also verify their signature).
 

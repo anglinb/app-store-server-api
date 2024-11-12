@@ -3,22 +3,32 @@ import fetch from "node-fetch"
 import { v4 as uuidv4 } from "uuid"
 import { AppStoreError } from "./Errors"
 import {
+  AccountTenure,
   CheckTestNotificationResponse,
+  ConsumptionRequest,
+  ConsumptionStatus,
+  DeliveryStatus,
   Environment,
   ExtendRenewalDateRequest,
   ExtendRenewalDateResponse,
   HistoryResponse,
+  LifetimeDollarsPurchased,
+  LifetimeDollarsRefunded,
   NotificationHistoryQuery,
   NotificationHistoryRequest,
   NotificationHistoryResponse,
   OrderLookupResponse,
+  Platform,
+  PlayTime,
   RefundHistoryResponse,
+  RefundPreference,
   SendTestNotificationResponse,
   StatusResponse,
   SubscriptionStatusesQuery,
   TransactionHistoryQuery,
   TransactionHistoryVersion,
-  TransactionInfoResponse
+  TransactionInfoResponse,
+  UserStatus
 } from "./Models"
 
 type HTTPMethod = "GET" | "POST" | "PUT"
@@ -78,13 +88,10 @@ export class AppStoreServerAPI {
   }
 
   /**
-   * https://developer.apple.com/documentation/appstoreserverapi/get_refund_history  
+   * https://developer.apple.com/documentation/appstoreserverapi/get_refund_history
    */
-  async getRefundHistory(
-    transactionId: string,
-    revision?: string,
-  ): Promise<RefundHistoryResponse> {
-    const path = this.addQuery(`/inApps/v2/refund/lookup/${transactionId}`, revision ?  { revision } : {})
+  async getRefundHistory(transactionId: string, revision?: string): Promise<RefundHistoryResponse> {
+    const path = this.addQuery(`/inApps/v2/refund/lookup/${transactionId}`, revision ? { revision } : {})
     return this.makeRequest("GET", path)
   }
 
@@ -146,6 +153,14 @@ export class AppStoreServerAPI {
   }
 
   /**
+   * https://developer.apple.com/documentation/appstoreserverapi/send_consumption_information
+   */
+  async sendConsumptionInformation(request: ConsumptionRequest): Promise<void> {
+    const { transactionId, ...rest } = request
+    return this.makeRequest("PUT", `/inApps/v1/transactions/consumption/${transactionId}`, rest)
+  }
+
+  /**
    * Performs a network request against the API and handles the result.
    */
   private async makeRequest(method: HTTPMethod, path: string, body?: any): Promise<any> {
@@ -174,7 +189,7 @@ export class AppStoreServerAPI {
       case 500:
         const body = await result.json()
         let retryAfter: number | undefined
-        let retryAfterHeader = result.headers.get('retry-after')
+        let retryAfterHeader = result.headers.get("retry-after")
         if (result.status === 429 && retryAfterHeader !== null) {
           retryAfter = parseInt(retryAfterHeader)
         }
