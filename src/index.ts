@@ -45,6 +45,16 @@ export {
   ExtendRenewalDateRequest,
   ExtendRenewalDateResponse,
   TransactionHistoryVersion,
+  ConsumptionRequest,
+  AccountTenure,
+  ConsumptionStatus,
+  DeliveryStatus,
+  LifetimeDollarsRefunded,
+  LifetimeDollarsPurchased,
+  Platform,
+  PlayTime,
+  RefundPreference,
+  UserStatus
 } from "./Models"
 
 export { decodeTransactions, decodeTransaction, decodeRenewalInfo, decodeNotificationPayload } from "./Decoding"
