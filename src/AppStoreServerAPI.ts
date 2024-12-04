@@ -181,13 +181,24 @@ export class AppStoreServerAPI {
       return result.json()
     }
 
+    const respText = await result.text()
+
+    if (result.status === 202) {
+      try {
+        return JSON.parse(respText)
+      } catch (e) {
+        console.error("Error parsing 202 response", e)
+        return {}
+      }
+    }
+
     switch (result.status) {
       case 400:
       case 403:
       case 404:
       case 429:
       case 500:
-        const body = await result.json()
+        const body = JSON.parse(respText)
         let retryAfter: number | undefined
         let retryAfterHeader = result.headers.get("retry-after")
         if (result.status === 429 && retryAfterHeader !== null) {
